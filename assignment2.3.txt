@@ -1,0 +1,62 @@
+Explain in detail each component of Hadoop 2.x:
+	Components of Hadoop 2.x:
+		* HDFS
+		       * Name node
+		       * Data node
+		       * Secondary Name node
+		*MapReduce
+		       * Job tracker
+		       * Task tracker
+		* YARN
+		      * Resource Manager
+		      * Node Manager
+	HDFS:
+		 This has 3 major components
+			Name Node:
+				This is placed in the Master Node. Its used to store Meta Data about Data nodes.
+				This manages information like location of file blocks across cluster and its permission.
+				Once this process is started, the meta dats are updated for newly added or removed files.
+				This process is the heart of HDFS.
+				This  is a single point of failure.
+				Two types of name nodes are active and standby.
+			Data Node:
+				This is placed in the Slave Nodes.This is used to store application data.
+				Data are stored in blocks of data of size 64MB each.
+				Based on the replication factor, a single block gets replicated in multiple slavenodes.
+				whenever required this process handles the access to data blocks.
+				This process sends heart bits to the name node inorder to keep it aware about the running slave process.
+			Secondary Name Node:
+				Only single instance of this process runs on a cluster.
+				This is not a true backup Namenode and cannot serve primary Namenode's operations.
+				It runs on different machine than the primary NameNode since the memory requirements are the same for both.
+				It stores a copy of FsImage file and edits log
+				Periodically refreshes the edits log.
+	MapReduce:
+		This has 2 major components
+			Job tracker:
+				This is a service that farms out all MapReduce task to different nodes in the cluster.
+				This  is the service that is responsible for taking client requests.
+				This  can accept map reduce jobs from the clients and run it in a distributed manner using all the cluster nodes available.
+				
+			Task tracker:
+				This runs on DataNode. Mostly on all DataNodes.
+				It is replaced by the Node Manager in MRv2.
+				Mapper and Reducer tasks are executed on DataNodes and are administered by TaskTrackers.
+				This will be in constant communication with the JobTracker signalling the progress of the task which is being executed
+				The failure of this task tracker is not considered fatal. When this becomes unresponsive, the JobTracker will assign the task executed by this to another node.
+	YARN:
+		This has 2 major components
+			Resource Manager:
+				This runs on the master node.
+				This is responsible for getting job submitted from client and schedule it on cluster there by monitoring those running jobs on clusters and allocating proper resources on slave node.
+				It communicates with the Node Manager process, on the slave node to track the resource utilization.
+				This uses two other processes namely, Application manager and Scheduler.
+
+			Node Manager:
+				This is a Per-Node Level component.
+				This runs on the slave nodes.
+				This is responsible for coordinating with Resource Manager for task scheduling and tracking the resource utilization on the slave node.
+				This reports about the resource utilization back to the resource manager.
+				
+
+				
